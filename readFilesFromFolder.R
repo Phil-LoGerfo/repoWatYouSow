@@ -22,7 +22,23 @@ for (i in 1:length(names(pf))) {
     tempName <- names(pf)[[i]]
     pnames <- c(pnames, tempName)
 }     
-    
+
+
+
+####
+
+####
+   
+names(psums) <- pnames
+ordpsums <- order(psums)
+ordpsums <- psums[ordpsums]
+plot(ordpsums)
+psumsdata <- as.data.frame(ordpsums, 
+row.names = names(ordpsums))
+colnames(psumsdata)  <- "Ordered Pee Sums"
+write.table(psumsdata, "pSumsData.csv", sep = ",")
+
+
  # pool <- rbind(c(tempName, tempSum))
 
 
