@@ -25,9 +25,11 @@ for (i in 1:length(names(pf))) {
 
 
 
-####Order, plot, write table of pee area sums from each file
+#***
 
-####
+#Order, plot, write table of pee area sums from each file
+
+ 
    
 names(psums) <- pnames
 ordpsums <- order(psums)
@@ -37,6 +39,9 @@ psumsdata <- as.data.frame(ordpsums,
 row.names = names(ordpsums))
 colnames(psumsdata)  <- "Ordered Pee Sums"
 write.table(psumsdata, "pSumsData.csv", sep = ",")
+
+# Next: sum the number of pee events
+
 
 
  # pool <- rbind(c(tempName, tempSum))
