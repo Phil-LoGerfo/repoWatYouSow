@@ -25,7 +25,7 @@ for (i in 1:length(names(pf))) {
 
 
 
-####
+####Order, plot, write table of pee area sums from each file
 
 ####
    
