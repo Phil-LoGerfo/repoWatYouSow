@@ -5,20 +5,42 @@ pf = lapply(filePaths,sep = ",", header = TRUE, row.names =1, read.delim)
 dim(pf[[1]])
 names(pf) <- fileNames
 
-pool <- data.frame(name = NULL, sum = NULL)
 
 pnames <- NULL
 psums <- NULL
+pevents <- NULL
 for (i in 1:length(names(pf))) {
   
+  # make sure there are pee events
   if (dim(pf[[i]])[1] > 0) {
-    tempSum <- sum(pf[[i]][1])
-    psums <- c(psums, tempSum)
+    
+    # filter out small area sizes
+    filter <- which(pf[[i]][1] > 1500)
+    fpf <- pf[[i]][filter,1]
+    
+    # check again for pee events after filtering
+    if (length(fpf) > 0) {
+      # count the number of pee events
+      tempEvent <- length(fpf)
+      pevents <- c(pevents, tempEvent)
+      # sum the total area of all pee events   
+      tempSum <- sum(fpf)
+      psums <- c(psums, tempSum)
+    }
+    
+    else {
+      psums <- c(psums, 0)
+      pevents <- c(pevents, 0)
+    }
+    
   }
-  
+
+   
   else {
     psums <- c(psums, 0)
+    pevents <- c(pevents, 0)
   } 
+  
     tempName <- names(pf)[[i]]
     pnames <- c(pnames, tempName)
 }     
@@ -30,15 +52,17 @@ for (i in 1:length(names(pf))) {
 #Order, plot, write table of pee area sums from each file
 
  
-   
-names(psums) <- pnames
-ordpsums <- order(psums)
-ordpsums <- psums[ordpsums]
-plot(ordpsums)
-psumsdata <- as.data.frame(ordpsums, 
-row.names = names(ordpsums))
-colnames(psumsdata)  <- "Ordered Pee Sums"
-write.table(psumsdata, "pSumsData.csv", sep = ",")
+pdata <- cbind(pnames, psums, pevents)   
+
+
+#names(psums) <- pnames
+#ordpsums <- order(psums)
+#ordpsums <- psums[ordpsums]
+#plot(ordpsums)
+#psumsdata <- as.data.frame(ordpsums, 
+#row.names = names(ordpsums))
+#colnames(psumsdata)  <- "Ordered Pee Sums"
+#write.table(psumsdata, "pSumsData.csv", sep = ",")
 
 # Next: sum the number of pee events
 
