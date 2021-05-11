@@ -23,9 +23,10 @@ for (i in 1:length(names(pf))) {
   
   # make sure there are pee events
   if (dim(pf[[i]])[1] > 0) {
-    
+    # make a list of unfiltered total voids
+    tpf <- pf[[i]][,1]
     # filter out very small area sizes
-    filter <- which(pf[[i]][1] > 1500)
+    filter <- which(pf[[i]][,1] > 1500)
     
     # make a list of voids for file i
     fpf <- pf[[i]][filter,1]
@@ -85,13 +86,18 @@ for (i in 1:length(names(pf))) {
     }
     
     else {
-      totala <- c(totala, sum(fpf))
-      totalv <- c(totalv,  length(fpf))
+      # If there are no micro or primary voids, but some voids < 1500 in area
+   #   totala <- c(totala, sum(tpf))
+    #  totalv <- c(totalv,  length(tpf))
       micv <- c(micv, 0)
       primv <- c(primv, 0)
-      tavg <- c(tavg, mean(fpf))
+  #    tavg <- c(tavg, mean(tpf))
       primavg = c(primavg, 0)
       microavg = c(microavg, 0)
+      
+      totala <- c(totala, 0)
+      totalv <- c(totalv,  0)
+      tavg <- c(tavg, 0)
       
     }
     
