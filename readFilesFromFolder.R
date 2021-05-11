@@ -16,6 +16,7 @@ micv <- NULL
 primv <- NULL
 totalv <- NULL
 primavg = NULL
+microavg = NULL
 tavg <- NULL
 
 for (i in 1:length(names(pf))) {
@@ -34,27 +35,42 @@ for (i in 1:length(names(pf))) {
  
       # count the number of total voids
       tempEvent <- length(fpf)
+      #add the total void count from that file to list totalv
       totalv <- c(totalv, tempEvent)
       
       # count microvoids
       tempmic <- which(fpf < 20000)
       if (length(tempmic > 0)) {
+        # add the total micro void count to list microv
         micv <- c(micv, length(tempmic))
+        # makes a list of micro voids only
+        mfpf <- fpf[tempmic]
+        # calculate the mean of micro voids
+        tempmic <- mean(mfpf)
+        # add the mean of micro voids to list microavg
+        microavg <- c(microavg, tempmic)
       }
       else {
+        # if there are no micro voids
         micv <- c(micv, 0)
+        microavg = c(microavg, 0)
       }
       
       # count primaryvoids
       tempprim <- which(fpf >= 20000)
       if (length(tempprim > 0)) {
+        # add the total primary void count to list primv
         primv <- c(primv, length(tempprim))
+        # makes a list of primary voids only
         pfpf <- fpf[tempprim]
+        # calculate the mean of primary voids
         tempprimavg <- mean(pfpf)
+        # add the mean of primary voids to list primavg
         primavg <- c(primavg, tempprimavg)
         
       }
       else {
+        # if there are no primary voids
         primv <- c(primv, 0)
         primavg = c(primavg, 0)
       }
@@ -75,6 +91,7 @@ for (i in 1:length(names(pf))) {
       primv <- c(primv, 0)
       tavg <- c(tavg, mean(fpf))
       primavg = c(primavg, 0)
+      microavg = c(microavg, 0)
       
     }
     
@@ -87,11 +104,12 @@ for (i in 1:length(names(pf))) {
     primv <- c(primv, 0)
     tavg <- c(tavg, 0)
     primavg = c(primavg, 0)
+    microavg = c(microavg, 0)
     
   } 
   
     
-     
+  # Add the name of data file to list pnames   
   tempName <- names(pf)[[i]]
   pnames <- c(pnames, tempName)
 }
@@ -104,9 +122,9 @@ for (i in 1:length(names(pf))) {
   
  
 
-pdata <- data.frame(File = pnames, Total_Area = totala, Total_Voids = totalv,
-                    Primary_Voids = primv, Micro_Voids = micv, Primary_Mean = 
-                      primavg, Total_Mean = tavg) 
+pdata <- data.frame(File = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
+                    Primary_Voids = primv, Primary_Mean = primavg, 
+                    Micro_Voids = micv, Micro_Mean = microavg) 
 
 
 write.table(pdata, "pSumsData.csv", sep = ",", row.names = FALSE)
