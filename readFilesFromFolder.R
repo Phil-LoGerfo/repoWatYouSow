@@ -126,14 +126,23 @@ for (i in 1:length(names(pf))) {
   
   
   
+  
+  
  
 
-pdata <- data.frame(File = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
+pdata <- data.frame(row.names = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
                     Primary_Voids = primv, Primary_Mean = primavg, 
                     Micro_Voids = micv, Micro_Mean = microavg) 
 
 
-write.table(pdata, "pSumsData.csv", sep = ",", row.names = FALSE)
+write.table(pdata, "pSumsData.csv", sep = ",", row.names = TRUE)
+
+
+pic <-ggplot(data.frame(Area= pdata$Total_Area, Voids=pdata$Total_Voids)) +
+geom_point(aes(Area,Voids)) +
+geom_smooth(mapping = aes(Area,Voids), method="lm", se=FALSE, color = "red")
+plot(pic)
+ggsave("Plots/AreaVoids.png")
 
 
 #names(psums) <- pnames
