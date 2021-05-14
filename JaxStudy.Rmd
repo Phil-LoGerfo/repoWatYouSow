@@ -1,5 +1,15 @@
+---
+title: "Jackson Mouse Study"
+author: "Philip LoGerfo"
+date: "May 2021"
+output: html_document
+
+---
+
 
 #############
+
+```{r sample of csv file with pee area sizes}
 
 filePaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = TRUE, recursive = TRUE)
 fileNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = FALSE, recursive = TRUE)
@@ -7,9 +17,12 @@ pf = lapply(filePaths,sep = ",", header = TRUE, row.names =1, read.delim)
 dim(pf[[1]])
 names(pf) <- fileNames
 
+```
 
 #################
 
+
+```{r }
 pnames <- NULL
 totala <- NULL
 micv <- NULL
@@ -27,18 +40,14 @@ for (i in 1:length(names(pf))) {
     tpf <- pf[[i]][,1]
     # filter out very small area sizes
     filter <- which(pf[[i]][,1] > 1500)
-    
     # make a list of voids for file i
     fpf <- pf[[i]][filter,1]
-    
     # check again for pee events after filtering
     if (length(fpf) > 0) {
- 
       # count the number of total voids
       tempEvent <- length(fpf)
-      #add the total void count from that file to list totalv
+      # add the total void count from that file to list totalv
       totalv <- c(totalv, tempEvent)
-      
       # count microvoids
       tempmic <- which(fpf < 20000)
       if (length(tempmic > 0)) {
@@ -50,13 +59,12 @@ for (i in 1:length(names(pf))) {
         tempmic <- mean(mfpf)
         # add the mean of micro voids to list microavg
         microavg <- c(microavg, tempmic)
-      }
+        }
       else {
         # if there are no micro voids
         micv <- c(micv, 0)
         microavg = c(microavg, 0)
       }
-      
       # count primaryvoids
       tempprim <- which(fpf >= 20000)
       if (length(tempprim > 0)) {
@@ -68,57 +76,48 @@ for (i in 1:length(names(pf))) {
         tempprimavg <- mean(pfpf)
         # add the mean of primary voids to list primavg
         primavg <- c(primavg, tempprimavg)
-        
       }
       else {
         # if there are no primary voids
         primv <- c(primv, 0)
         primavg = c(primavg, 0)
       }
-
     # sum the total area of all pee events   
       tempa <- sum(fpf)
       totala <- c(totala, tempa)
-      
     # calculate the mean of all voids
       tempavg <- mean(fpf)
       tavg <- c(tavg, tempavg)
     }
-    
     else {
       # If there are no micro or primary voids, but some voids < 1500 in area
-   #   totala <- c(totala, sum(tpf))
-    #  totalv <- c(totalv,  length(tpf))
+      #   totala <- c(totala, sum(tpf))
+      #  totalv <- c(totalv,  length(tpf))
       micv <- c(micv, 0)
       primv <- c(primv, 0)
-  #    tavg <- c(tavg, mean(tpf))
+      #    tavg <- c(tavg, mean(tpf))
       primavg = c(primavg, 0)
       microavg = c(microavg, 0)
-      
       totala <- c(totala, 0)
       totalv <- c(totalv,  0)
       tavg <- c(tavg, 0)
-      
+      }
     }
-    
-  }
-  else {
-    
-    totala <- c(totala, 0)
-    totalv <- c(totalv, 0)
-    micv <- c(micv, 0)
-    primv <- c(primv, 0)
-    tavg <- c(tavg, 0)
-    primavg = c(primavg, 0)
-    microavg = c(microavg, 0)
-    
+    else {
+      totala <- c(totala, 0)
+      totalv <- c(totalv, 0)
+      micv <- c(micv, 0)
+      primv <- c(primv, 0)
+      tavg <- c(tavg, 0)
+      primavg = c(primavg, 0)
+      microavg = c(microavg, 0)
   } 
-  
-    
   # Add the name of data file to list pnames   
-  tempName <- names(pf)[[i]]
-  pnames <- c(pnames, tempName)
+    tempName <- names(pf)[[i]]
+    pnames <- c(pnames, tempName)
 }
+
+```
 ###################
 #***
 
