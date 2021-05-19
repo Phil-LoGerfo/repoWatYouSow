@@ -1,3 +1,6 @@
+ library(png)
+ library(ggplot2)
+
  pngPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = TRUE, recursive = TRUE)
  pngNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = FALSE, recursive = TRUE)
  #pp = lapply(pngPaths, readPNG)
