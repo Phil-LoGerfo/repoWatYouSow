@@ -21,6 +21,7 @@ totalv <- NULL
 primavg = NULL
 microavg = NULL
 tavg <- NULL
+stdmm <- NULL
 
 for (i in 1:length(filePaths)) {
   
@@ -35,13 +36,23 @@ for (i in 1:length(filePaths)) {
   
   # make sure there are pee events
   if (dim(pf[1]) > 0) {
+    
+    #convert pixels to area
+    stdmm <- tempbase/(265*111)
+    
+    #calculate volume 
+    pvol <- (pf[1]/stdmm)*0.283
+    
     # make a list of unfiltered total voids
-    tpf <- pf[1]
+    #tpf <- pf[1]
     # filter out very small area sizes
-    filter <- which(pf[,1] > 1500)
+    #filter <- which(pf[,1] > 1500)
+    
+    # filter out very small volumes
+    filter <- which(pvol > 2)
     
     # make a list of voids for file i
-    fpf <- pf[filter,1]
+    fpf <- pvol[filter,1]
     
     # check again for pee events after filtering
     if (length(fpf) > 0) {
@@ -52,7 +63,7 @@ for (i in 1:length(filePaths)) {
       totalv <- c(totalv, tempEvent)
       
       # count microvoids
-      tempmic <- which(fpf < 20000)
+      tempmic <- which(fpf < 22)
       if (length(tempmic > 0)) {
         # add the total micro void count to list microv
         micv <- c(micv, length(tempmic))
@@ -70,7 +81,7 @@ for (i in 1:length(filePaths)) {
       }
       
       # count primaryvoids
-      tempprim <- which(fpf >= 20000)
+      tempprim <- which(fpf >= 22)
       if (length(tempprim > 0)) {
         # add the total primary void count to list primv
         primv <- c(primv, length(tempprim))
@@ -142,12 +153,14 @@ for (i in 1:length(filePaths)) {
 
 
 
-pdata <- data.frame(row.names = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
+
+
+pdata <- data.frame(row.names = pnames, Filenames = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
                     Primary_Voids = primv, Primary_Mean = primavg, 
                     Micro_Voids = micv, Micro_Mean = microavg, base = base) 
 
 
-write.table(pdata, "pSumsData.csv", sep = ",", row.names = TRUE)
+write.table(pdata, "pSumsData.csv", sep = ",", row.names = FALSE)
 
 
 pic <-ggplot(data.frame(Area= pdata$Total_Area, Voids=pdata$Total_Voids)) +
