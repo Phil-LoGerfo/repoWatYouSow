@@ -3,13 +3,13 @@
 
  pngPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = TRUE, recursive = TRUE)
  pngNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = FALSE, recursive = TRUE)
- #pp = lapply(pngPaths, readPNG)
+
  
   #########################
  
- filePaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = TRUE, recursive = TRUE)
- fileNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = FALSE, recursive = TRUE)
- #pf = lapply(filePaths,sep = ",", header = TRUE, row.names =1, read.delim)
+ csvPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = TRUE, recursive = TRUE)
+ csvNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = FALSE, recursive = TRUE)
+
 
 
 base <- NULL
@@ -23,7 +23,7 @@ microavg = NULL
 tavg <- NULL
 stdmm <- NULL
 
-for (i in 1:length(filePaths)) {
+for (i in 1:length(csvPaths)) {
   
   # Read in the PNG file that corresponds with the CSV file
   pp <- readPNG(pngPaths[i])
@@ -32,7 +32,7 @@ for (i in 1:length(filePaths)) {
   base <- c(base, tempbase)
   
   # Read in the CSV file 
-  pf <- read.delim(filePaths[i], sep = ",", header = TRUE, row.names = 1)
+  pf <- read.delim(csvPaths[i], sep = ",", header = TRUE, row.names = 1)
   
   # make sure there are pee events
   if (dim(pf[1]) > 0) {
@@ -139,7 +139,7 @@ for (i in 1:length(filePaths)) {
   
   
   # Add the name of data file to list pnames   
-  tempName <- fileNames[i]
+  tempName <- csvNames[i]
   pnames <- c(pnames, tempName)
 }
 ###################
@@ -151,16 +151,16 @@ for (i in 1:length(filePaths)) {
 
 
 
-
-
-
-
-pdata <- data.frame(row.names = pnames, Filenames = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
+pdata <- data.frame(row.names = pnames, csvNames = pnames, Total_Volumes = totala, Total_Voids = totalv, Total_Mean = tavg,
                     Primary_Voids = primv, Primary_Mean = primavg, 
-                    Micro_Voids = micv, Micro_Mean = microavg, base = base) 
+                    Micro_Voids = micv, Micro_Mean = microavg) 
 
 
-write.table(pdata, "pSumsData.csv", sep = ",", row.names = FALSE)
+write.table(pdata, "pVolsData.csv", sep = ",", row.names = FALSE)
+
+
+
+#######################################
 
 
 pic <-ggplot(data.frame(Area= pdata$Total_Area, Voids=pdata$Total_Voids)) +

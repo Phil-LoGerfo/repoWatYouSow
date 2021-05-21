@@ -6,23 +6,45 @@ output: html_document
 
 ---
 
+#############
+
+```{r get dependencies}
+  
+  library(png)
+
+```
+
 
 #############
 
-```{r sample of csv file with pee area sizes}
+```{r read in csv and png files}
 
-filePaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = TRUE, recursive = TRUE)
-fileNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = FALSE, recursive = TRUE)
-pf = lapply(filePaths,sep = ",", header = TRUE, row.names =1, read.delim)
-dim(pf[[1]])
-names(pf) <- fileNames
+# Read in the CSV and PNG Files
+
+ pngPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = TRUE, recursive = TRUE)
+ pngNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = FALSE, recursive = TRUE)
+
+ 
+  #########################
+ 
+ csvPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = TRUE, recursive = TRUE)
+ csvNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.csv", full.names = FALSE, recursive = TRUE)
+
+
+
 
 ```
 
 #################
 
 
-```{r }
+```{r warning = FALSE }
+
+##Convert pixel counts to area (mm^2) and then convert void area to volumes
+
+# A bunch of variables that are initialized before the operation
+
+base <- NULL
 pnames <- NULL
 totala <- NULL
 micv <- NULL
@@ -31,25 +53,49 @@ totalv <- NULL
 primavg = NULL
 microavg = NULL
 tavg <- NULL
+stdmm <- NULL
 
-for (i in 1:length(names(pf))) {
+for (i in 1:length(csvPaths)) {
+  
+  # Read in the PNG file that corresponds with the CSV file
+  pp <- readPNG(pngPaths[i])
+  # estimate the pixel area of the cage floor
+  tempbase <- length(which(pp > .05))
+  base <- c(base, tempbase)
+  
+  # Read in the CSV file 
+  pf <- read.delim(csvPaths[i], sep = ",", header = TRUE, row.names = 1)
   
   # make sure there are pee events
-  if (dim(pf[[i]])[1] > 0) {
+  if (dim(pf[1]) > 0) {
+    
+    #convert pixels to area
+    stdmm <- tempbase/(265*111)
+    
+    #calculate volume 
+    pvol <- (pf[1]/stdmm)*0.283
+    
     # make a list of unfiltered total voids
-    tpf <- pf[[i]][,1]
+    #tpf <- pf[1]
     # filter out very small area sizes
-    filter <- which(pf[[i]][,1] > 1500)
+    #filter <- which(pf[,1] > 1500)
+    
+    # filter out very small volumes
+    filter <- which(pvol > 2)
+    
     # make a list of voids for file i
-    fpf <- pf[[i]][filter,1]
+    fpf <- pvol[filter,1]
+    
     # check again for pee events after filtering
     if (length(fpf) > 0) {
+      
       # count the number of total voids
       tempEvent <- length(fpf)
-      # add the total void count from that file to list totalv
+      #add the total void count from that file to list totalv
       totalv <- c(totalv, tempEvent)
+      
       # count microvoids
-      tempmic <- which(fpf < 20000)
+      tempmic <- which(fpf < 22)
       if (length(tempmic > 0)) {
         # add the total micro void count to list microv
         micv <- c(micv, length(tempmic))
@@ -59,14 +105,15 @@ for (i in 1:length(names(pf))) {
         tempmic <- mean(mfpf)
         # add the mean of micro voids to list microavg
         microavg <- c(microavg, tempmic)
-        }
+      }
       else {
         # if there are no micro voids
         micv <- c(micv, 0)
         microavg = c(microavg, 0)
       }
+      
       # count primaryvoids
-      tempprim <- which(fpf >= 20000)
+      tempprim <- which(fpf >= 22)
       if (length(tempprim > 0)) {
         # add the total primary void count to list primv
         primv <- c(primv, length(tempprim))
@@ -76,19 +123,23 @@ for (i in 1:length(names(pf))) {
         tempprimavg <- mean(pfpf)
         # add the mean of primary voids to list primavg
         primavg <- c(primavg, tempprimavg)
+        
       }
       else {
         # if there are no primary voids
         primv <- c(primv, 0)
         primavg = c(primavg, 0)
       }
-    # sum the total area of all pee events   
+      
+      # sum the total area of all pee events   
       tempa <- sum(fpf)
       totala <- c(totala, tempa)
-    # calculate the mean of all voids
+      
+      # calculate the mean of all voids
       tempavg <- mean(fpf)
       tavg <- c(tavg, tempavg)
     }
+    
     else {
       # If there are no micro or primary voids, but some voids < 1500 in area
       #   totala <- c(totala, sum(tpf))
@@ -98,70 +149,48 @@ for (i in 1:length(names(pf))) {
       #    tavg <- c(tavg, mean(tpf))
       primavg = c(primavg, 0)
       microavg = c(microavg, 0)
+      
       totala <- c(totala, 0)
       totalv <- c(totalv,  0)
       tavg <- c(tavg, 0)
-      }
+      
     }
-    else {
-      totala <- c(totala, 0)
-      totalv <- c(totalv, 0)
-      micv <- c(micv, 0)
-      primv <- c(primv, 0)
-      tavg <- c(tavg, 0)
-      primavg = c(primavg, 0)
-      microavg = c(microavg, 0)
+    
+  }
+  else {
+    
+    totala <- c(totala, 0)
+    totalv <- c(totalv, 0)
+    micv <- c(micv, 0)
+    primv <- c(primv, 0)
+    tavg <- c(tavg, 0)
+    primavg = c(primavg, 0)
+    microavg = c(microavg, 0)
+    
   } 
+  
+  
   # Add the name of data file to list pnames   
-    tempName <- names(pf)[[i]]
-    pnames <- c(pnames, tempName)
+  tempName <- csvNames[i]
+  pnames <- c(pnames, tempName)
 }
-
 ```
 ###################
-#***
-
-#**Part3**
-  
-  
-# vol <- ((sqrt(area)/width)^2)*0.283 
 
    
-  
- 
 
-pdata <- data.frame(row.names = pnames, Total_Area = totala, Total_Voids = totalv, Total_Mean = tavg,
+
+```{r }
+
+# Format the results into a table and write to csv file 
+
+pdata <- data.frame(row.names = pnames, Total_Volume = totala, Total_Voids = totalv, Total_Mean = tavg,
                     Primary_Voids = primv, Primary_Mean = primavg, 
                     Micro_Voids = micv, Micro_Mean = microavg) 
 
 
-write.table(pdata, "pSumsData.csv", sep = ",", row.names = TRUE)
+write.table(pdata, "pVolsData.csv", sep = ",", row.names = TRUE)
 
 
-pic <-ggplot(data.frame(Area= pdata$Total_Area, Voids=pdata$Total_Voids)) +
-geom_point(aes(Area,Voids)) +
-geom_smooth(mapping = aes(Area,Voids), method="lm", se=FALSE, color = "red")
-plot(pic)
-ggsave("AreaVoids.png")
+```
 
-
-
-#names(psums) <- pnames
-#ordpsums <- order(psums)
-#ordpsums <- psums[ordpsums]
-#plot(ordpsums)
-#psumsdata <- as.data.frame(ordpsums, 
-#row.names = names(ordpsums))
-#colnames(psumsdata)  <- "Ordered Pee Sums"
-
-
-# Next: sum the number of pee events
-
-
-
-# pool <- rbind(c(tempName, tempSum))
-
-
-
-#fileNames <- substring(temp,0)
-#names(myfiles) <- fileNames 
