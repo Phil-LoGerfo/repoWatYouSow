@@ -43,11 +43,6 @@ for (i in 1:length(csvPaths)) {
     #calculate volume 
     pvol <- (pf[1]/stdmm)*0.283
     
-    # make a list of unfiltered total voids
-    #tpf <- pf[1]
-    # filter out very small area sizes
-    #filter <- which(pf[,1] > 1500)
-    
     # filter out very small volumes
     filter <- which(pvol > 2)
     
