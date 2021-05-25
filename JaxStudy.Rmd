@@ -184,12 +184,14 @@ for (i in 1:length(csvPaths)) {
 
 # Format the results into a table and write to csv file 
 
-pdata <- data.frame(row.names = pnames, Total_Volume = totala, Total_Voids = totalv, Total_Mean = tavg,
+pdata <- data.frame(row.names = pnames, csvNames = pnames, Total_Volumes = totala, Total_Voids = totalv, Total_Mean = tavg,
                     Primary_Voids = primv, Primary_Mean = primavg, 
                     Micro_Voids = micv, Micro_Mean = microavg) 
 
 
-write.table(pdata, "pVolsData.csv", sep = ",", row.names = TRUE)
+write.table(pdata, "pVolsData.csv", sep = ",", row.names = FALSE)
+
+
 
 
 ```

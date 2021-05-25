@@ -185,3 +185,18 @@ ggsave("AreaVoids.png")
 
 
 # pool <- rbind(c(tempName, tempSum))
+
+
+
+###### pca tests
+
+
+#frm <- NULL
+#for (i in 1:10)
+#frm <- cbind(frm, runif(20))
+#dow_pca <- princomp(frm)
+#screeplot(dow_pca)
+#t(eigen(cov(frm))$vectors)[1:5,]*(-1)
+
+
+
