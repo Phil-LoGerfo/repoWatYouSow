@@ -42,9 +42,9 @@ output: html_document
 
 ##Convert pixel counts to area (mm^2) and then convert void area to volumes
 
-# A bunch of variables that are initialized before the operation
+# Below are a bunch of variables that are initialized before the operation
 
-base <- NULL
+base <- NULL  
 pnames <- NULL
 totala <- NULL
 micv <- NULL
@@ -177,19 +177,23 @@ for (i in 1:length(csvPaths)) {
 ```
 ###################
 
-   
+Look at the nameOfFile variable. That is the name of the file that will be written with all the results in it.
+You can change it to anything you want. Make sure to put the name in quotes "".
 
 
 ```{r }
 
 # Format the results into a table and write to csv file 
 
+# Make sure you know the name of the file that is written!
+nameOfFile <- "pVolsData.csv"
+
 pdata <- data.frame(row.names = pnames, csvNames = pnames, Total_Volumes = totala, Total_Voids = totalv, Total_Mean = tavg,
                     Primary_Voids = primv, Primary_Mean = primavg, 
                     Micro_Voids = micv, Micro_Mean = microavg) 
 
 
-write.table(pdata, "pVolsData.csv", sep = ",", row.names = FALSE)
+write.table(pdata, nameOfFile, sep = ",", row.names = FALSE)
 
 
 
