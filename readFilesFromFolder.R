@@ -1,11 +1,23 @@
  
- 
+##########################################
+# Program to summarize data from a directory containing individual CSV files and 
+# corresponding PNG files into one data file. 
+# The program calculates void volumes, measured in microliters, by standardizing
+# the void area sizes, measured in pixel counts, to the size of the image of the filter
+# paper, and then applying the formula to convert area size to volume size. 
+# The void area sizes are contained in CSV files and the images of the filters are in 
+# PNG files. 
+# For each CSV file and its corresponding PNG file, the following values are returned: 
+# Total Volume, Number of Micro Voids, Number of Primary Voids, Mean Total Void Volume 
+# Mean Micro Void Volume, Mean Primary Void Volume. These values are added to a data frame,
+# and the corresponding CSV file names are used as the rownames for the data frame.   
+#########################################
  
 ########
 
  # Load the packages required for the program
  library(png)
- library(ggplot2)
+ #library(ggplot2)
 
  
  # !!Make sure to check the name of the directory path!!
@@ -29,7 +41,7 @@
 ########
 
 pixelCount <- NULL
-totalArea <- NULL
+totalVol <- NULL
 microVoid <- NULL
 primeVoid <- NULL
 totalVoids <- NULL
@@ -111,7 +123,7 @@ for (i in 1:length(csvPaths)) {
       
       # sum the total area of all pee events   
       tempa <- sum(fpf)
-      totalArea <- c(totalArea, tempa)
+      totalVol <- c(totalVol, tempa)
       
       # calculate the mean of all voids
       tempAvg <- mean(fpf)
@@ -124,7 +136,7 @@ for (i in 1:length(csvPaths)) {
       primeVoid <- c(primeVoid, 0)
       primeAvg = c(primeAvg, 0)
       microAvg = c(microAvg, 0) 
-      totalArea <- c(totalArea, 0)
+      totalVol <- c(totalVol, 0)
       totalVoids <- c(totalVoids,  0)
       totalAvg <- c(totalAvg, 0)
       
@@ -133,7 +145,7 @@ for (i in 1:length(csvPaths)) {
   }
   else {
     
-    totalArea <- c(totalArea, 0)
+    totalVol <- c(totalVol, 0)
     totalVoids <- c(totalVoids, 0)
     microVoid <- c(microVoid, 0)
     primeVoid <- c(primeVoid, 0)
@@ -157,7 +169,7 @@ for (i in 1:length(csvPaths)) {
 
 
 
-pdata <- data.frame(row.names = csvNames, csvNames = csvNames, Total_Volumes = totalArea, Total_Voids = totalVoids, Total_Mean = totalAvg,
+pdata <- data.frame(row.names = csvNames, csvNames = csvNames, Total_Volumes = totalVol, Total_Voids = totalVoids, Total_Mean = totalAvg,
                     Primary_Voids = primeVoid, Primary_Mean = primeAvg, 
                     Micro_Voids = microVoid, Micro_Mean = microAvg) 
 

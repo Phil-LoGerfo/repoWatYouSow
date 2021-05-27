@@ -1,13 +1,32 @@
+##########################################
+# Program to read from a directory individual CSV files, containing values of area units, 
+# and corresponding PNG files from a directory and write new CSV files back to the 
+# directory with values that have been converted to volume units. 
+# 
+# The program calculates void volumes, measured in microliters, by standardizing
+# the void area sizes, measured in pixel counts, to the size of the image of the filter
+# paper, and then applying the formula to convert area size to volume size. 
+# The void area sizes are contained in CSV files and the images of the filters are in 
+# PNG files. 
+#   
+#########################################
+
 library(png)
 
 #### Read in the CSV and PNG file Names and Paths
 
-pngPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = TRUE, recursive = TRUE)
-pngNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*.png", full.names = FALSE, recursive = TRUE)
+ # !!Make sure to check the name of the directory path!!
+pngPathName <- "~/Test_set_Lg/Test_Set_Lg"
 
 
-csvPaths <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*areas.csv", full.names = TRUE, recursive = TRUE)
-csvNames <- dir(path ="~/Test_set_Lg/Test_Set_Lg", pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
+pngPaths <- dir(path = pngPathName, pattern = "*.png", full.names = TRUE, recursive = TRUE)
+pngNames <- dir(path = pngPathName, pattern = "*.png", full.names = FALSE, recursive = TRUE)
+
+# !!Make sure to check the name of the directory path!!
+csvPathName <-	"~/Test_set_Lg/Test_Set_Lg"
+
+csvPaths <- dir(path = csvPathName, pattern = "*areas.csv", full.names = TRUE, recursive = TRUE)
+csvNames <- dir(path = csvPathName, pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
 
 
 ########
