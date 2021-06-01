@@ -17,8 +17,6 @@
 
  # Load the packages required for the program
  library(png)
- #library(ggplot2)
-
  
  # !!Make sure to check the name of the directory path!!
  pngPathName <- "~/Test_set_Lg/Test_Set_Lg"
@@ -178,6 +176,34 @@ pdata <- data.frame(row.names = csvNames, csvNames = csvNames, Total_Volumes = t
 nameOfFile <- "pVolsData.csv"
 
 write.table(pdata, nameOfFile, sep = ",", row.names = FALSE)
+
+#######
+
+#~/150 Weeks/20/DO-20-1049-1094/Day 2/tifs_Predic
+
+filePathNameLength <- nchar("~/150 Weeks/20/DO-20-1049-1094/Day 2/tifs_Predic")
+branch2length <- nchar("DO-20-1049-1094")
+#15
+trunk <- "~/150 Weeks"
+branch1 <- c("1D","2D","20","40","AL")
+
+folderPath <- paste(trunk, branch1, sep, "/")
+folderPath
+#branch2 <- c("","")
+
+currFolderPath <- dir(path = trunk, full.names = TRUE, recursive = FALSE)
+
+currFolderPath <- dir(path = currFolderPath[1], full.names = TRUE, recursive = FALSE)
+
+currFolderPath <- dir(path = currFolderPath[1], full.names = TRUE, recursive = FALSE)
+
+currFolderPath <- dir(path = currFolderPath[1], full.names = TRUE, recursive = FALSE)
+
+csvAreasFilePath <- dir(path = currFolderPath[1], pattern = "areas.csv", full.names = TRUE, recursive = FALSE)
+
+pngFilePath <- dir(path = currFolderPath[1], pattern = ".png", full.names = TRUE, recursive = FALSE)
+ 
+#######################################
 
 
 
