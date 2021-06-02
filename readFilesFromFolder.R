@@ -13,29 +13,31 @@
 # and the corresponding CSV file names are used as the rownames for the data frame.   
 #########################################
  
-########
-
  # Load the packages required for the program
- library(png)
+library(png)
+library(tidyverse)
  
  # !!Make sure to check the name of the directory path!!
- pngPathName <- "~/Test_set_Lg/Test_Set_Lg"
+ #pngPathName <- "~/Test_set_Lg/Test_Set_Lg"
+
+ trunk <- "~/150 Weeks"
 
  # Make a list of the PNG file names with the paths included
- pngPaths <- dir(path =pngPathName, pattern = "*.png", full.names = TRUE, recursive = TRUE)
+ pngPaths <- dir(path =trunk, pattern = "*.png", full.names = TRUE, recursive = TRUE)
  
  # Make a list of the PNG file names without the paths
- pngNames <- dir(path =pngPathName, pattern = "*.png", full.names = FALSE, recursive = TRUE)
+ #pngNames <- dir(path =trunk, pattern = "*.png", full.names = FALSE, recursive = TRUE)
 
 # !!Make sure to check the name of the directory path!!
- csvPathName <-	"~/Test_set_Lg/Test_Set_Lg"
+# csvPathName <-	"~/Test_set_Lg/Test_Set_Lg"
  
  # Make a list of the CSV file names with the paths included
- csvPaths <- dir(path =csvPathName, pattern = "*areas.csv", full.names = TRUE, recursive = TRUE)
+ csvPaths <- dir(path =trunk, pattern = "*.csv", full.names = TRUE, recursive = TRUE)
  
  # Make a list of the CSV file names without the paths
- csvNames <- dir(path =csvPathName, pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
+ #csvNames <- dir(path =trunk, pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
 
+########
 ########
 
 pixelCount <- NULL
@@ -154,7 +156,7 @@ for (i in 1:length(csvPaths)) {
   } 
   
   if (i %% 5 == 0)
-  print(paste(i, " of ", length(csvNames), sep = ""))
+  print(paste(i, " of ", length(csvPaths), sep = ""))
   
 }
 ###################
@@ -205,7 +207,7 @@ pngFilePath <- dir(path = currFolderPath[1], pattern = ".png", full.names = TRUE
  
 #######################################
 
-
+csvAreasFilePath <- dir(path = trunk, pattern = "areas.csv", full.names = TRUE, recursive = TRUE)
 
 
 #######################################
@@ -245,6 +247,23 @@ ggsave("AreaVoids.png")
 #dow_pca <- princomp(frm)
 #screeplot(dow_pca)
 #t(eigen(cov(frm))$vectors)[1:5,]*(-1)
+
+csv80 <- NULL
+for (i in 1:length(csvPaths)) {
+	temp <- substring(csvPaths[i],1,80)
+	csv80 <- rbind(csv80, temp)
+	}
+
+
+
+png80 <- NULL
+for (i in 1:length(pngPaths)) {
+	temp <- substring(pngPaths[i],1,80)
+	png80<- rbind(png80, temp)
+	}
+
+
+
 
 
 
