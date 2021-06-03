@@ -10,25 +10,31 @@
 # PNG files. 
 #   
 #########################################
-
+ # Load the packages required for the program
 library(png)
-
-#### Read in the CSV and PNG file Names and Paths
-
+library(tidyverse)
+ 
  # !!Make sure to check the name of the directory path!!
-pngPathName <- "~/Test_set_Lg/Test_Set_Lg"
+ #pngPathName <- "~/Test_set_Lg/Test_Set_Lg"
 
+ trunk <- "~/150 Weeks"
 
-pngPaths <- dir(path = pngPathName, pattern = "*.png", full.names = TRUE, recursive = TRUE)
-pngNames <- dir(path = pngPathName, pattern = "*.png", full.names = FALSE, recursive = TRUE)
+ # Make a list of the PNG file names with the paths included
+ pngPaths <- dir(path =trunk, pattern = "*.png", full.names = TRUE, recursive = TRUE)
+ 
+ # Make a list of the PNG file names without the paths
+ #pngNames <- dir(path =trunk, pattern = "*.png", full.names = FALSE, recursive = TRUE)
 
 # !!Make sure to check the name of the directory path!!
-csvPathName <-	"~/Test_set_Lg/Test_Set_Lg"
+# csvPathName <-	"~/Test_set_Lg/Test_Set_Lg"
+ 
+ # Make a list of the CSV file names with the paths included
+ csvPaths <- dir(path =trunk, pattern = "*areas.csv", full.names = TRUE, recursive = TRUE)
+ 
+ # Make a list of the CSV file names without the paths
+ #csvNames <- dir(path =trunk, pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
 
-csvPaths <- dir(path = csvPathName, pattern = "*areas.csv", full.names = TRUE, recursive = TRUE)
-csvNames <- dir(path = csvPathName, pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
-
-
+########
 ########
 
 
@@ -37,6 +43,8 @@ stdArea <- NULL
 voidVol <- NULL
 
 for (i in 1:length(csvPaths)) {
+
+
   
   # Read in the PNG file that corresponds with the CSV file
   pp <- readPNG(pngPaths[i])
@@ -50,20 +58,21 @@ for (i in 1:length(csvPaths)) {
   pf <- read.delim(csvPaths[i], sep = ",", header = TRUE, row.names = 1)
   
   # make sure there are pee events
-  if (dim(pf[1]) > 0) {
+  if (length(pf[,1]) > 0) {
     #calculate volume 
     voidVol <- (pf[1]/stdArea)*0.283		
-    voidVol <- cbind(rownames(pf), voidVol)
-    colnames(voidVol) <- c("ID","Volumes")
+    voidVol <- data.frame(ID = rownames(pf), Volume = voidVol)
+	colnames(voidVol) <- c("ID", "Volume")
     newFileName <-  paste(substring(csvPaths[i],1, nchar(csvPaths[i])- 9 ), "Vols.csv", sep = "")
     write.table(voidVol, newFileName , sep = ',', row.names = FALSE)
-  }
+  } 
   else {
     newFileName <- paste(substring(csvPaths[i],1, nchar(csvPaths[i])- 9 ), "Vols.csv", sep = "")
     write.table(pf, newFileName , sep = ',')
   }
+  voidVol <- NULL
   if (i %% 5 == 0)
-  print(paste(i, " of ", length(csvNames), sep = ""))
+  print(paste(i, " of ", length(csvPaths), sep = ""))
 }
 
 

@@ -40,6 +40,11 @@ library(tidyverse)
 ########
 ########
 
+age <- NULL
+diet <- NULL
+group <- NULL
+day <- NULL
+imageNum <- NULL
 pixelCount <- NULL
 totalVol <- NULL
 microVoid <- NULL
@@ -51,6 +56,15 @@ totalAvg <- NULL
 
 
 for (i in 1:length(csvPaths)) {
+
+	
+  branches <- str_split(csvPaths[i],"/")
+  
+  age <- rbind(age, branches[[1]][5])
+  diet <- rbind(diet, branches[[1]][6])
+  group <- rbind(group, branches[[1]][7])
+  day <- rbind(day, branches[[1]][8])
+  imageNum <- rbind(imageNum, branches[[1]][10])
   
   # Read in the PNG file that corresponds with the CSV file
   pp <- readPNG(pngPaths[i])
@@ -62,7 +76,7 @@ for (i in 1:length(csvPaths)) {
   pf <- read.delim(csvPaths[i], sep = ",", header = TRUE, row.names = 1)
   
   # make sure there are pee events
-  if (dim(pf[1]) > 0) {
+  if (length(pf[,1]) > 0) {
     
     #convert pixels to area
     stdArea <- temppixelCount/(265*111)
@@ -159,6 +173,34 @@ for (i in 1:length(csvPaths)) {
   print(paste(i, " of ", length(csvPaths), sep = ""))
   
 }
+
+
+
+
+pdata <- data.frame(row.names = imageNum, Image = imageNum, Total_Volumes = totalVol, Total_Voids = totalVoids, Total_Mean = totalAvg,
+                    Primary_Voids = primeVoid, Primary_Mean = primeAvg, 
+                    Micro_Voids = microVoid, Micro_Mean = microAvg, Age = age, Diet = diet, Group = group, Day = day) 
+
+
+# !!Make sure to check the name of the file that is written!!
+nameOfFile <- "VoidDataSummary.csv"
+
+write.table(pdata, nameOfFile, sep = ",", row.names = FALSE)
+
+
+
+
+
+
+
+
+
+######### END ############### END ################## END ################ END ############
+
+
+
+
+
 ###################
 
 # Add the name of data file to list pnames   
@@ -167,17 +209,6 @@ for (i in 1:length(csvPaths)) {
 
 #***
 
-
-
-pdata <- data.frame(row.names = csvNames, csvNames = csvNames, Total_Volumes = totalVol, Total_Voids = totalVoids, Total_Mean = totalAvg,
-                    Primary_Voids = primeVoid, Primary_Mean = primeAvg, 
-                    Micro_Voids = microVoid, Micro_Mean = microAvg) 
-
-
-# !!Make sure to check the name of the file that is written!!
-nameOfFile <- "pVolsData.csv"
-
-write.table(pdata, nameOfFile, sep = ",", row.names = FALSE)
 
 #######
 
