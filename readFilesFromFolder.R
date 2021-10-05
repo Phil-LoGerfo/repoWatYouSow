@@ -32,8 +32,9 @@ library(tidyverse)
 # csvPathName <-	"~/Test_set_Lg/Test_Set_Lg"
  
  # Make a list of the CSV file names with the paths included
- csvPaths <- dir(path =trunk, pattern = "*.csv", full.names = TRUE, recursive = TRUE)
+ #csvPaths <- dir(path =trunk, pattern = "*.csv", full.names = TRUE, recursive = TRUE)
  
+ csvPaths <- dir(path =trunk, pattern = "*areas.csv", full.names = TRUE, recursive = TRUE)
  # Make a list of the CSV file names without the paths
  #csvNames <- dir(path =trunk, pattern = "*areas.csv", full.names = FALSE, recursive = TRUE)
 
@@ -45,6 +46,7 @@ diet <- NULL
 group <- NULL
 day <- NULL
 imageNum <- NULL
+
 pixelCount <- NULL
 totalVol <- NULL
 microVoid <- NULL
@@ -55,147 +57,158 @@ microAvg = NULL
 totalAvg <- NULL
 
 
-for (i in 1:length(csvPaths)) {
+
+
+if (length(csvPaths) != length(pngPaths)) {
+  print("Number of csv files: ", length(csvPaths), ". Number of png files: ", length(pngPaths), 
+        ". Must have equal number of files!")
+} else {
+
+  
+  for (i in 1:length(csvPaths)) {
 
 	
-  branches <- str_split(csvPaths[i],"/")
+    branches <- str_split(csvPaths[i],"/")
   
-  age <- rbind(age, branches[[1]][5])
-  diet <- rbind(diet, branches[[1]][6])
-  group <- rbind(group, branches[[1]][7])
-  day <- rbind(day, branches[[1]][8])
-  imageNum <- rbind(imageNum, branches[[1]][10])
+    age <- rbind(age, branches[[1]][5])
+    diet <- rbind(diet, branches[[1]][6])
+    group <- rbind(group, branches[[1]][7])
+    day <- rbind(day, branches[[1]][8])
+    imageNum <- rbind(imageNum, branches[[1]][10])
   
-  # Read in the PNG file that corresponds with the CSV file
-  pp <- readPNG(pngPaths[i])
-  # estimate the pixel area of the cage floor
-  temppixelCount <- length(which(pp > .05))
-  pixelCount <- c(pixelCount, temppixelCount)
+    # Read in the PNG file that corresponds with the CSV file
+    pp <- readPNG(pngPaths[i])
+    # estimate the pixel area of the cage floor
+    temppixelCount <- length(which(pp > .05))
+    pixelCount <- c(pixelCount, temppixelCount)
   
-  # Read in the CSV file 
-  pf <- read.delim(csvPaths[i], sep = ",", header = TRUE, row.names = 1)
+    # Read in the CSV file 
+    pf <- read.delim(csvPaths[i], sep = ",", header = TRUE, row.names = 1)
   
-  # make sure there are pee events
-  if (length(pf[,1]) > 0) {
+    # make sure there are pee events
+    if (length(pf[,1]) > 0) {
     
-    #convert pixels to area
-    stdArea <- temppixelCount/(265*111)
+      #convert pixels to area
+      stdArea <- temppixelCount/(265*111)
     
-    #calculate volume 
-    pvol <- (pf[1]/stdArea)*0.283
+      #calculate volume 
+      pvol <- (pf[1]/stdArea)*0.283
     
-    # filter out very small volumes
-    filter <- which(pvol > 2)
+      # filter out very small volumes
+      filter <- which(pvol > 2)
     
-    # make a list of voids for file i
-    fpf <- pvol[filter,1]
+      # make a list of voids for file i
+      fpf <- pvol[filter,1]
     
-    # check again for pee events after filtering
-    if (length(fpf) > 0) {
+      # check again for pee events after filtering
+      if (length(fpf) > 0) {
       
-      # count the number of total voids
-      tempEvent <- length(fpf)
-      #add the total void count from that file to list totalVoids
-      totalVoids <- c(totalVoids, tempEvent)
+        # count the number of total voids
+        tempEvent <- length(fpf)
+        #add the total void count from that file to list totalVoids
+        totalVoids <- c(totalVoids, tempEvent)
       
-      # count microvoids
-      tempMicro <- which(fpf < 22)
-      if (length(tempMicro > 0)) {
-        # add the total micro void count to list microv
-        microVoid <- c(microVoid, length(tempMicro))
-        # makes a list of micro voids only
-        mfpf <- fpf[tempMicro]
-        # calculate the mean of micro voids
-        tempMicro <- mean(mfpf)
-        # add the mean of micro voids to list microAvg
-        microAvg <- c(microAvg, tempMicro)
-      }
-      else {
-        # if there are no micro voids
-        microVoid <- c(microVoid, 0)
-        microAvg = c(microAvg, 0)
-      }
+        # count microvoids
+        tempMicro <- which(fpf < 22)
+        if (length(tempMicro > 0)) {
+          # add the total micro void count to list microv
+          microVoid <- c(microVoid, length(tempMicro))
+          # makes a list of micro voids only
+          mfpf <- fpf[tempMicro]
+          # calculate the mean of micro voids
+          tempMicro <- mean(mfpf)
+          # add the mean of micro voids to list microAvg
+          microAvg <- c(microAvg, tempMicro)
+        } else {
+            # if there are no micro voids
+            microVoid <- c(microVoid, 0)
+            microAvg = c(microAvg, 0)
+          }
       
-      # count primaryvoids
-      tempPrime <- which(fpf >= 22)
-      if (length(tempPrime > 0)) {
-        # add the total primary void count to list primeVoid
-        primeVoid <- c(primeVoid, length(tempPrime))
-        # makes a list of primary voids only
-        pfpf <- fpf[tempPrime]
-        # calculate the mean of primary voids
-        tempPrimeAvg <- mean(pfpf)
-        # add the mean of primary voids to list primeAvg
-        primeAvg <- c(primeAvg, tempPrimeAvg)
+        # count primaryvoids
+        tempPrime <- which(fpf >= 22)
+        if (length(tempPrime > 0)) {
+          # add the total primary void count to list primeVoid
+          primeVoid <- c(primeVoid, length(tempPrime))
+          # makes a list of primary voids only
+          pfpf <- fpf[tempPrime]
+          # calculate the mean of primary voids
+          tempPrimeAvg <- mean(pfpf)
+          # add the mean of primary voids to list primeAvg
+          primeAvg <- c(primeAvg, tempPrimeAvg)
         
-      }
-      else {
-        # if there are no primary voids
+        } else {
+            # if there are no primary voids
+            primeVoid <- c(primeVoid, 0)
+            primeAvg = c(primeAvg, 0)
+          }
+      
+        # sum the total area of all pee events   
+        tempa <- sum(fpf)
+        totalVol <- c(totalVol, tempa)
+      
+        # calculate the mean of all voids
+        tempAvg <- mean(fpf)
+        totalAvg <- c(totalAvg, tempAvg)
+      } else {
+          # If there are no micro or primary voids, but some voids < 1500 in area
+          microVoid <- c(microVoid, 0)
+          primeVoid <- c(primeVoid, 0)
+          primeAvg = c(primeAvg, 0)
+          microAvg = c(microAvg, 0) 
+          totalVol <- c(totalVol, 0)
+          totalVoids <- c(totalVoids,  0)
+          totalAvg <- c(totalAvg, 0)
+        }
+    
+    } else {
+    
+        totalVol <- c(totalVol, 0)
+        totalVoids <- c(totalVoids, 0)
+        microVoid <- c(microVoid, 0)
         primeVoid <- c(primeVoid, 0)
+        totalAvg <- c(totalAvg, 0)
         primeAvg = c(primeAvg, 0)
-      }
-      
-      # sum the total area of all pee events   
-      tempa <- sum(fpf)
-      totalVol <- c(totalVol, tempa)
-      
-      # calculate the mean of all voids
-      tempAvg <- mean(fpf)
-      totalAvg <- c(totalAvg, tempAvg)
-    }
-    
-    else {
-      # If there are no micro or primary voids, but some voids < 1500 in area
-      microVoid <- c(microVoid, 0)
-      primeVoid <- c(primeVoid, 0)
-      primeAvg = c(primeAvg, 0)
-      microAvg = c(microAvg, 0) 
-      totalVol <- c(totalVol, 0)
-      totalVoids <- c(totalVoids,  0)
-      totalAvg <- c(totalAvg, 0)
-      
-    }
-    
+        microAvg = c(microAvg, 0)
+      } 
+  
+    if (i %% 5 == 0)
+      print(paste(i, " of ", length(csvPaths), sep = ""))
+  
   }
-  else {
-    
-    totalVol <- c(totalVol, 0)
-    totalVoids <- c(totalVoids, 0)
-    microVoid <- c(microVoid, 0)
-    primeVoid <- c(primeVoid, 0)
-    totalAvg <- c(totalAvg, 0)
-    primeAvg = c(primeAvg, 0)
-    microAvg = c(microAvg, 0)
-    
-  } 
-  
-  if (i %% 5 == 0)
-  print(paste(i, " of ", length(csvPaths), sep = ""))
-  
-}
 
 
 
-
-pdata <- data.frame(row.names = imageNum, Image = imageNum, Total_Volumes = totalVol, Total_Voids = totalVoids, Total_Mean = totalAvg,
+  pdata <- data.frame(row.names = imageNum, Image = imageNum, Total_Volumes = totalVol, Total_Voids = totalVoids, Total_Mean = totalAvg,
                     Primary_Voids = primeVoid, Primary_Mean = primeAvg, 
                     Micro_Voids = microVoid, Micro_Mean = microAvg, Age = age, Diet = diet, Group = group, Day = day) 
 
 
-# !!Make sure to check the name of the file that is written!!
-nameOfFile <- "VoidDataSummary.csv"
+  # !!Make sure to check the name of the file that is written!!
+  nameOfFile <- "VoidDataSummary.csv"
 
-write.table(pdata, nameOfFile, sep = ",", row.names = FALSE)
+  write.table(pdata, nameOfFile, sep = ",", row.names = FALSE)
 
-
-
-
-
-
-
+}
 
 
 ######### END ############### END ################## END ################ END ############
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
