@@ -7,20 +7,21 @@ output: html_document
 ---
 
 ##########################################
-# Program to summarize data from a directory containing individual CSV files and 
-# corresponding PNG files into one data file. 
-# The program calculates void volumes, measured in microliters, by standardizing
-# the void area sizes, measured in pixel counts, to the size of the image of the filter
-# paper, and then applying the formula to convert area size to volume size. 
-# The void area sizes are contained in CSV files and the images of the filters are in 
-# PNG files. 
-# For each CSV file and its corresponding PNG file, the following values are returned: 
-# Total Volume, Number of Micro Voids, Number of Primary Voids, Mean Total Void Volume 
-# Mean Micro Void Volume, Mean Primary Void Volume. These values are added to a data frame,
-# and the corresponding CSV file names are used as the rownames for the data frame.   
+#### Program to summarize data from a directory containing individual CSV files and 
+#### corresponding PNG files into one data file. 
+#### The program calculates void volumes, measured in microliters, by standardizing
+#### the void area sizes, measured in pixel counts, to the size of the image of the filter
+#### paper, and then applying the formula to convert area size to volume size. 
+#### The void area sizes are contained in CSV files and the images of the filters are in 
+#### PNG files. 
+#### For each CSV file and its corresponding PNG file, the following values are returned: 
+#### Total Volume, Number of Micro Voids, Number of Primary Voids, Mean Total Void Volume 
+#### Mean Micro Void Volume, Mean Primary Void Volume. 
+#### These values are added to a data frame,
+#### and the corresponding CSV file names are used as the rownames for the data frame.   
 #########################################
 
-```{r get dependencies}
+```{r eval = FALSE}
   
 library(png)
 library(tidyverse)
@@ -60,7 +61,7 @@ library(tidyverse)
 #################
 
 
-```{r warning = FALSE }
+```{r eval = FALSE }
 
 ##Convert pixel counts to area (mm^2) and then convert void area to volumes
 
