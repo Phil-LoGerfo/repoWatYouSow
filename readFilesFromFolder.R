@@ -93,7 +93,7 @@ if (length(csvPaths) != length(pngPaths)) {
     
       #calculate volume 
       pvol <- (pf[1]/stdArea)*0.283
-    
+      # Here would be a good place to retain the stdArea values, by binding them to the pvol values..
       # filter out very small volumes
       filter <- which(pvol > 2)
     

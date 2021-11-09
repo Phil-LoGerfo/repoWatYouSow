@@ -61,8 +61,9 @@ for (i in 1:length(csvPaths)) {
   if (length(pf[,1]) > 0) {
     #calculate volume 
     voidVol <- (pf[1]/stdArea)*0.283		
+    # Here would be a good place to retain the stdArea values, by binding them to the voidVol data frame. 
     voidVol <- data.frame(ID = rownames(pf), Volume = voidVol)
-	colnames(voidVol) <- c("ID", "Volume")
+	  colnames(voidVol) <- c("ID", "Volume")
     newFileName <-  paste(substring(csvPaths[i],1, nchar(csvPaths[i])- 9 ), "Vols.csv", sep = "")
     write.table(voidVol, newFileName , sep = ',', row.names = FALSE)
   } 
