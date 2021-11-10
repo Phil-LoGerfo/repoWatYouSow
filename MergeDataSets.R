@@ -15,7 +15,7 @@ dim(w50d1)
 ol50 <- overLapper(setlist, type="vennsets")
 w50d1o <- w50d1[ol50$Venn_List$`A-B`,]
 w50d2o <- w50d2[ol50$Venn_List$`A-B`,]
-w50t <- cbind(w50d1o[,2:8], w150d2o[,2:8])
+w50t <- cbind(w50d1o[,2:8], w50d2o[,2:8])
 
 
 dim(w100d2)
