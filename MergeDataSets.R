@@ -11,6 +11,7 @@ setlist <- list(A = rownames(w50d1), B =rownames(w50d2))
 dim(w50d2)
 dim(w50d1)
 
+source("overLapper.R")
 # https://github.com/wjidea/Bac_Pan/blob/master/overLapper.R
 ol50 <- overLapper(setlist, type="vennsets")
 w50d1o <- w50d1[ol50$Venn_List$`A-B`,]
@@ -26,4 +27,21 @@ ol100 <- overLapper(setlist, type="vennsets")
 w100d1o <- w100d1[ol100$Venn_List$`A-B`,]
 w100d2o <- w100d2[ol100$Venn_List$`A-B`,]
 w100t <- cbind(w100d1o[,2:8], w100d2o[,2:8])
+
+oldies <- rownames(w150t)
+
+old50 <- w50t[oldies,]
+old100 <- w100t[oldies,]
+old <- cbind(old50, old100, w150t)
+
+med <- overLapper(list(med = rownames(w100t), old = oldies), type = "vennsets")
+meds <- med$Venn_List$med
+med100 <- w100t[meds,]
+med50 <- w50t[meds,]
+
+med <- cbind(med50, med100)
+
+short <- overLapper(list(short = rownames(w50t), med = meds), type = "vennsets")
+shorts <- short$Venn_List$short
+short <- w50t[shorts,]
 
