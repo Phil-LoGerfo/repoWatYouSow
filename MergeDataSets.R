@@ -68,11 +68,53 @@ lifeByDietAge <- c(sct, mct, oct, sr20, mr20, or20, sr40, mr40, or40, sd1, md1, 
 
 lifeByAgeDiet <- c(sct, sr20, sr40, sd1, sd2, mct, mr20, mr40, md1, md2, oct, or20, or40, od1, od2)
 
+lifeByDiet <- c(sct, mct, oct, sr20, mr20, or20, sr40, mr40, or40, sd1, md1, od1, sd2, md2, od2)
+
+barplot(lifeByDiet)
+
+lifeByAgeDiet <- c(sct, sr20, sr40, sd1, sd2, mct, mr20, mr40, md1, md2, oct, or20, or40, od1, od2)
+barplot(lifeByAgeDiet)
+
 sl <- dim(short)[1]
 ml <- dim(med)[1]
 ol <- dim(old)[1]
-
 lifeByAgePropDiet <- c(sct/sl, sr20/sl, sr40/sl, sd1/sl, sd2/sl, mct/ml, mr20/ml, mr40/ml, md1/ml, md2/ml, oct/ol, or20/ol, or40/ol, od1/ol, od2/ol)
+barplot(lifeByAgePropDiet)
 
+##################################################
+
+colnames(short)
+shortMic <- short[,5] * short[,6] + short[,12] * short[,13]
+shortMic <- shortMic/sl
+shortMic <- short[,5] * short[,6] + short[,12] * short[,13]
+shortAvg <- sum(shortMic)/sl
+shortAvg
+
+medMic <- med[,19] * med[,20] + med[,26] * med[,27]
+
+medAvg <- sum(medMic)/ml
+medAvg
+medAvg100<- medAvg
+
+
+medMic50 <- na.omit(med[,5]) * na.omit(med[,6]) + na.omit(med[,12]) * na.omit(med[,13])
+medAvg50 <- sum(medMic50)/length(medMic50)
+medAvg50
+medAvg100
+
+oldMic50 <- na.omit(old[,5]) * na.omit(old[,6]) + na.omit(old[,12]) * na.omit(old[,13])
+oldAvg50 <- sum(oldMic50)/length(oldMic50)
+oldAvg50
+oldMic100 <- na.omit(old[,19]) * na.omit(old[,20]) + na.omit(old[,26]) * na.omit(old[,27])
+oldAvg100 <- sum(oldMic100)/length(oldMic100)
+oldAvg100
+
+oldMic150 <- na.omit(old[,33]) * na.omit(old[,34]) + na.omit(old[,40]) * na.omit(old[,41])
+oldAvg150 <- sum(oldMic150)/length(oldMic150)
+oldAvg150
+medAvg100
+shortAvg
+medAvg50
+oldAvg50
 
 
