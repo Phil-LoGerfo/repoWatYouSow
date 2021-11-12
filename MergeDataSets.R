@@ -45,3 +45,34 @@ short <- overLapper(list(short = rownames(w50t), med = meds), type = "vennsets")
 shorts <- short$Venn_List$short
 short <- w50t[shorts,]
 
+
+
+sct <- length(which(short$Group == "Ct"))
+sr20 <- length(which(short$Group == "R20"))
+sr40 <- length(which(short$Group == "R40"))
+sd1 <- length(which(short$Group == "D1"))
+sd2 <- length(which(short$Group == "D2"))
+mct <-  length(which(med$Group == "Ct"))
+mr20 <-  length(which(med$Group == "R20"))
+mr40 <-  length(which(med$Group == "R40"))
+md1 <-  length(which(med$Group == "D1"))
+md2 <-  length(which(med$Group == "D2"))
+oct <-  length(which(old$Group == "Ct"))
+or20 <-  length(which(old$Group == "R20"))
+or40 <-  length(which(old$Group == "R40"))
+od1 <-  length(which(old$Group == "RD1"))
+od2 <-  length(which(old$Group == "RD2"))
+
+
+lifeByDietAge <- c(sct, mct, oct, sr20, mr20, or20, sr40, mr40, or40, sd1, md1, od1, sd2, md2, od2)
+
+lifeByAgeDiet <- c(sct, sr20, sr40, sd1, sd2, mct, mr20, mr40, md1, md2, oct, or20, or40, od1, od2)
+
+sl <- dim(short)[1]
+ml <- dim(med)[1]
+ol <- dim(old)[1]
+
+lifeByAgePropDiet <- c(sct/sl, sr20/sl, sr40/sl, sd1/sl, sd2/sl, mct/ml, mr20/ml, mr40/ml, md1/ml, md2/ml, oct/ol, or20/ol, or40/ol, od1/ol, od2/ol)
+
+
+
